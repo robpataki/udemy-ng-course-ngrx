@@ -42,14 +42,6 @@ export class AuthComponent implements OnInit, OnDestroy {
     });
   }
 
-  ngOnDestroy() {
-    if (this.closeSub) {
-      this.closeSub.unsubscribe();
-    }
-
-    this.storeSub.unsubscribe();
-  }
-
   onSwitchMode() {
     this.isLoginMode = !this.isLoginMode;
   }
@@ -61,9 +53,8 @@ export class AuthComponent implements OnInit, OnDestroy {
     const email = form.value.email;
     const password = form.value.password;
 
-    this.isLoading = true;
-
     if (this.isLoginMode) {
+      // authObs = this.authService.login(email, password);
       this.store.dispatch(
         new AuthActions.LoginStart({ email: email, password: password })
       );
@@ -78,6 +69,15 @@ export class AuthComponent implements OnInit, OnDestroy {
 
   onHandleError() {
     this.store.dispatch(new AuthActions.ClearError());
+  }
+
+  ngOnDestroy() {
+    if (this.closeSub) {
+      this.closeSub.unsubscribe();
+    }
+    if (this.storeSub) {
+      this.storeSub.unsubscribe();
+    }
   }
 
   private showErrorAlert(message: string) {
